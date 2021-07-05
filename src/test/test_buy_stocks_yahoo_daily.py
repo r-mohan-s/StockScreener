@@ -24,10 +24,9 @@ stocks_to_check = read_from_file(file_to_read_usa)
 for stocks in stocks_to_check:
     try:
         print(f"Checking for {stocks}")
-        stock_details_daily = get_quote_data(stocks, '60d', '1d')
-        volume_daily = stock_details_daily[4]
+        stock_details = get_quote_data(stocks, '60d', '1d')
+        volume_daily = stock_details[4]
 
-        stock_details = get_quote_data(stocks)
         volume = stock_details[4]
         if volume_daily[0] >= 750000:
             is_cross_hour, is_red_to_green_hour = sma_crossing_current(stock_details[0:4])
@@ -41,4 +40,4 @@ for stocks in stocks_to_check:
         print(f"Failed getting data for {stocks}")
         pass
 
-send_mail_with_attachment(file_red_to_green,"Hourly.csv",market+"_"+str(today)+"_daily")
+send_mail_with_attachment(file_red_to_green,market+"_"+str(today)+"_daily.csv",market+"_"+str(today)+"_daily")
