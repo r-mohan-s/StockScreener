@@ -1,6 +1,6 @@
 from src.test.tests import sma_crossing_current
-from src.utils.mail_utils import send_mail_with_attachment
-from src.utils.utils import read_from_file,write_to_file
+from src.test.mail_utils import send_mail_with_attachment
+from src.test.utils import read_from_file,write_to_file
 from src.test.tests import get_stock_price_and_sma
 import os
 from datetime import datetime
