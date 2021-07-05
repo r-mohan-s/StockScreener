@@ -1,39 +1,25 @@
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
-import smtplib
-from datetime import date
+import emails
 
+def send_mail_with_attachment(file_name="blank.csv", data=""):
+    message = emails.html(
+        html="<h1>My message</h1><strong>I've got something to tell you!</strong>",
+        subject="A very important message",
+        mail_from="referral.0812@gmail.com",
+    )
+    message.attach(data=open(file_name),filename=data)
 
-def send_mail_with_attachment(file_name="blank.csv"):
-    today = date.today()
+    # Send the email
+    r = message.send(
+        to="referral.0812@gmail.com",
+        smtp={
+            "host": "email-smtp.us-east-2.amazonaws.com",
+            "port": 587,
+            "timeout": 5,
+            "user": "AKIA5LPHNNMH6R3GSH7G",
+            "password": "BB2mZNvY1vucnTKt62iZGDNQJSlWsjC1G2e3kIv1lCnJ",
+            "tls": True,
+        },
+    )
 
-    message = MIMEMultipart()
-    message["from"] = "Mohan Subramani"
-    message["to"] = "rsmohan.0812@gmail.com"
-    message["subject"] = "Buy list for "+str(today)
-
-    # open the file to be sent
-    attachment = open(file_name, "rb")
-
-    # instance of MIMEBase and named as p
-    p = MIMEBase('application', 'octet-stream')
-
-    # To change the payload into encoded form
-    p.set_payload((attachment).read())
-
-    # encode into base64
-    encoders.encode_base64(p)
-
-    p.add_header('Content-Disposition', "attachment; filename= %s" % file_name)
-
-    # attach the instance 'p' to instance 'msg'
-    message.attach(p)
-
-    with smtplib.SMTP(host="smtp.gmail.com", port=587) as smtp:
-        smtp.ehlo()
-        smtp.starttls()
-        smtp.login("mohancando123@gmail.com", "5102921851")
-        smtp.send_message(message)
-        print("Mail sent")
+    # Check if the email was properly sent
+    assert r.status_code == 250

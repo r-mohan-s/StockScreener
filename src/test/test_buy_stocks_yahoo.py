@@ -13,7 +13,8 @@ PROJECT_ROOT = os.getcwd()
 file_red_to_green_hourly = PROJECT_ROOT+"/output/red_to_green_stocks_hourly_"+str(today)+".csv"
 file_red_to_green_daily = PROJECT_ROOT+"/output/red_to_green_stocks_daily_"+str(today)+".csv"
 
-file_to_read_usa = PROJECT_ROOT+"/StockScreener/src/testData/NASDAQ.csv"
+#file_to_read_usa = PROJECT_ROOT+"/StockScreener/src/testData/NASDAQ.csv"
+file_to_read_usa = "/testData/NASDAQ.csv"
 stocks_to_check = read_from_file(file_to_read_usa)
 for stocks in stocks_to_check:
     try:

@@ -2,7 +2,7 @@ import csv
 
 
 def write_to_file(symbol_name, file_name):
-    with open(file_name, "a") as file:
+    with open(file_name, 'a') as file:
         file.write(symbol_name)
         file.write("\n")
 
