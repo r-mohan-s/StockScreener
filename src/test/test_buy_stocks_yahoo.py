@@ -3,12 +3,17 @@ from datetime import date
 from src.utils.mail_utils import send_mail_with_attachment
 from src.utils.yahoo_api import get_quote_data
 from src.utils.utils import read_from_file, write_to_file
+import os
 
 today = date.today()
-file_red_to_green_hourly = "../../output/red_to_green_stocks_hourly_"+str(today)+".csv"
-file_red_to_green_daily = "../../output/red_to_green_stocks_daily_"+str(today)+".csv"
+path_current = os.path.dirname(os.getcwd())
+os.chdir(path_current)
+PROJECT_ROOT = os.getcwd()
 
-file_to_read_usa = "../../testData/NASDAQ.csv"
+file_red_to_green_hourly = PROJECT_ROOT+"/output/red_to_green_stocks_hourly_"+str(today)+".csv"
+file_red_to_green_daily = PROJECT_ROOT+"/output/red_to_green_stocks_daily_"+str(today)+".csv"
+
+file_to_read_usa = PROJECT_ROOT+"/testData/NASDAQ.csv"
 stocks_to_check = read_from_file(file_to_read_usa)
 for stocks in stocks_to_check:
     try:
