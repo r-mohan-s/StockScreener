@@ -1,9 +1,9 @@
 import emails
 
-def send_mail_with_attachment(file_name="blank.csv", data=""):
+def send_mail_with_attachment(file_name="blank.csv", data="",mailsubject=""):
     message = emails.html(
         html="<h1>My message</h1><strong>I've got something to tell you!</strong>",
-        subject="A very important message",
+        subject=mailsubject,
         mail_from="referral.0812@gmail.com",
     )
     message.attach(data=open(file_name),filename=data)

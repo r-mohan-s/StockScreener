@@ -16,7 +16,9 @@ for file in os.scandir(PROJECT_ROOT+"/output"):
     if file.name.endswith(".csv"):
         os.unlink(file.path)
 
-file_red_to_green_hourly = PROJECT_ROOT+"/output/red_to_green_stocks_hourly_"+args.v1+"_"+str(today)+".csv"
+
+
+file_red_to_green_hourly = PROJECT_ROOT+"/output/red_to_green_stocks_hourly_"++"_"+str(today)+".csv"
 file_to_read_usa = PROJECT_ROOT+"/src/testData/NASDAQ.csv"
 
 stocks_to_check = read_from_file(file_to_read_usa)

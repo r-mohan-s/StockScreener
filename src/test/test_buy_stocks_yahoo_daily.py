@@ -4,6 +4,7 @@ from src.test.mail_utils import send_mail_with_attachment
 from src.test.yahoo_api import get_quote_data
 from src.test.utils import read_from_file, write_to_file
 import argparse
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument('v1')
@@ -11,9 +12,14 @@ args = parser.parse_args()
 today = date.today()
 PROJECT_ROOT = "/home/ssm-user/myFolder/StockScreener"
 
-file_red_to_green = PROJECT_ROOT+"/output/red_to_green_stocks_daily_"+args.v1+"_"+str(today)+".csv"
-file_to_read_usa = PROJECT_ROOT+"/src/testData/"+args.v1
+for file in os.scandir(PROJECT_ROOT+"/output"):
+    if file.name.endswith(".csv"):
+        os.unlink(file.path)
 
+market = args.v1
+
+file_red_to_green = PROJECT_ROOT+"/output/red_to_green_stocks_daily_"+market+"_"+str(today)+".csv"
+file_to_read_usa = PROJECT_ROOT+"/src/testData/"+market+".csv"
 stocks_to_check = read_from_file(file_to_read_usa)
 for stocks in stocks_to_check:
     try:
@@ -23,7 +29,7 @@ for stocks in stocks_to_check:
 
         stock_details = get_quote_data(stocks)
         volume = stock_details[4]
-        if(volume_daily[0] >=750000):
+        if volume_daily[0] >= 750000:
             is_cross_hour, is_red_to_green_hour = sma_crossing_current(stock_details[0:4])
             if is_cross_hour:
                 write_to_file(f"{stock_details[0]} cross", file_red_to_green)
@@ -35,4 +41,4 @@ for stocks in stocks_to_check:
         print(f"Failed getting data for {stocks}")
         pass
 
-send_mail_with_attachment(file_red_to_green,"Hourly.csv")
+send_mail_with_attachment(file_red_to_green,"Hourly.csv",market+"_"+str(today)+"_daily")
