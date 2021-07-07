@@ -29,10 +29,10 @@ for stocks in stocks_to_check:
 
         volume = stock_details[4]
         if volume_daily[0] >= 750000:
-            is_cross_hour, is_red_to_green_hour = sma_crossing_current(stock_details[0:4])
-            if is_cross_hour:
+            is_cross, is_red_to_green = sma_crossing_current(stock_details[0:4])
+            if is_cross:
                 write_to_file(f"{stock_details[0]} cross", file_red_to_green)
-            if is_red_to_green_hour:
+            if is_red_to_green:
                 write_to_file(f"{stock_details[0]} red_to_green", file_red_to_green)
         else:
             print(f"Skipped {stocks} as the volume is less")

@@ -16,30 +16,28 @@ for file in os.scandir(PROJECT_ROOT+"/output"):
     if file.name.endswith(".csv"):
         os.unlink(file.path)
 
+market = args.v1
 
-
-file_red_to_green_hourly = PROJECT_ROOT+"/output/red_to_green_stocks_hourly_"++"_"+str(today)+".csv"
-file_to_read_usa = PROJECT_ROOT+"/src/testData/NASDAQ.csv"
-
+file_red_to_green = PROJECT_ROOT+"/output/red_to_green_stocks_hourly_"+market+"_"+str(today)+".csv"
+file_to_read_usa = PROJECT_ROOT+"/src/testData/"+market+".csv"
 stocks_to_check = read_from_file(file_to_read_usa)
+
 for stocks in stocks_to_check:
     try:
-        print(f"Checking for {stocks}")
-        stock_details_daily = get_quote_data(stocks, '60d', '1d')
+        stock_details_daily = get_quote_data(stocks, '20d', '1d')
         volume_daily = stock_details_daily[4]
-
         stock_details = get_quote_data(stocks)
-        volume = stock_details[4]
-        if(volume_daily[0]>=750000):
-            is_cross_hour, is_red_to_green_hour = sma_crossing_current(stock_details[0:4])
-            if is_cross_hour:
-                write_to_file(f"{stock_details[0]} cross", file_red_to_green_hourly)
-            if is_red_to_green_hour:
-                write_to_file(f"{stock_details[0]} red_to_green", file_red_to_green_hourly)
+
+        if volume_daily[0] >= 750000:
+            is_cross, is_red_to_green = sma_crossing_current(stock_details[0:4])
+            if is_cross:
+                write_to_file(f"{stock_details[0]} cross", file_red_to_green)
+            if is_red_to_green:
+                write_to_file(f"{stock_details[0]} red_to_green", file_red_to_green)
         else:
             print(f"Skipped {stocks} as the volume is less")
     except:
         print(f"Failed getting data for {stocks}")
         pass
 
-send_mail_with_attachment(file_red_to_green_hourly,"Hourly.csv")
+send_mail_with_attachment(file_red_to_green,market+"_"+str(today)+"_hourly.csv",market+"_"+str(today)+"_Hourly")
