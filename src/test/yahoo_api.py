@@ -3,21 +3,28 @@ import pandas as pd
 import arrow
 import datetime
 
-def get_quote_data(symbol , data_range='20d', data_interval='1h'):
-    res = requests.get('https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?range={data_range}&interval={data_interval}'.format(**locals()))
+
+def get_quote_data(symbol, data_range='20d', data_interval='1h'):
+    url = "https://query1.finance.yahoo.com/v8/finance/chart/"+symbol+"?range="+data_range+"&interval="+data_interval
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+
+    res = requests.get(url.format(**locals()), headers = headers)
+    # res = requests.get('https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?range={data_range}&interval={data_interval}'.format(**locals()))
     data = res.json()
     body = data['chart']['result'][0]
     dt = datetime.datetime
-    dt = pd.Series(map(lambda x: arrow.get(x).to('US/Pacific').datetime.replace(tzinfo=None), body['timestamp']), name='Datetime')
+    dt = pd.Series(map(lambda x: arrow.get(x).to('US/Pacific').datetime.replace(tzinfo=None), body['timestamp']),
+                   name='Datetime')
     df = pd.DataFrame(body['indicators']['quote'][0], index=dt)
     dg = pd.DataFrame(body['timestamp'])
     df = df.loc[:, ('open', 'high', 'low', 'close', 'volume')]
     df.dropna(inplace=True)
-    df.columns = ['OPEN', 'HIGH','LOW','CLOSE','VOLUME']
-    #return df
+    df.columns = ['OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME']
+    # return df
 
     # Calculate SMA
-    data_close = df.iloc[:,3]
+    data_close = df.iloc[:, 3]
     data_close['SMA50'] = data_close.rolling(50).mean()
     sma_value = data_close['SMA50'].tail(20).values.tolist()
 
@@ -31,6 +38,4 @@ def get_quote_data(symbol , data_range='20d', data_interval='1h'):
     # Get Volume
     data_volume = df.iloc[:, 4]
     volume = data_volume.tail(5).values.tolist()
-    return symbol,sma_value,price_high,price_low,volume
-
-
+    return symbol, sma_value, price_high, price_low, volume

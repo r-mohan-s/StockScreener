@@ -63,6 +63,17 @@ def sma_crossing_current(stock_with_prices):
     ans12 = sma2 < sma3
     ans13 = sma1 < high1
 
+    # Screen for recently turned buy
+    ans21 = sma1 > sma2
+    ans22 = sma2 > sma3
+    ans23 = sma3 > sma4
+    ans24 = sma4 > sma5
+    ans25 = sma5 > sma6
+    ans26 = sma6 > sma7
+    ans27 = sma7 > sma8
+    ans28 = sma8 > sma9
+    ans29 = sma9 > sma10
+
     if ans1 and ans2 and ans3:
         is_cross = True
     else:
@@ -72,7 +83,21 @@ def sma_crossing_current(stock_with_prices):
     else:
         is_red_to_green = False
 
-    return is_cross, is_red_to_green
+    if ans21 and ans22 and not ans23:
+        is_recent_buy = True
+
+    if ans21 and ans22 and ans23 and not ans24:
+        is_recent_buy = True
+
+    if ans21 and ans22 and ans23 and ans24 and not ans25:
+        is_recent_buy = True
+
+    if ans21 and ans22 and ans23 and ans24 and ans25 and not ans26:
+        is_recent_buy = True
+
+    else: is_recent_buy = False
+
+    return is_cross, is_red_to_green,is_recent_buy
 
 
 def stock_green_to_red(stock_with_prices):
